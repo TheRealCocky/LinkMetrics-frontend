@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
@@ -18,8 +19,11 @@ import {
     Legend,
     LabelList,
 } from "recharts";
-import { Copy, RefreshCw, Link2, ArrowLeft, Trash2 } from "lucide-react";
+import { Copy, RefreshCw, Link2, ArrowLeft, Trash2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+
+// 🚀 força client-side rendering no Vercel
+export const dynamic = "force-dynamic";
 
 interface Link {
     id: string;
@@ -56,24 +60,37 @@ export default function Manager() {
     const [links, setLinks] = useState<Link[]>([]);
     const [metrics, setMetrics] = useState<LinkMetrics | null>(null);
     const [history, setHistory] = useState<HistoryItem[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false); // carregamento geral
+    const [loadingMetrics, setLoadingMetrics] = useState(false); // carregamento de métricas
 
     // carregar lista de links
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if (token) getLinks(token).then(setLinks);
+        if (!token) return;
+        setLoading(true);
+        getLinks(token)
+            .then(setLinks)
+            .catch(() => toast.error("❌ Erro ao carregar links"))
+            .finally(() => setLoading(false));
     }, []);
 
     // carregar métricas de um link específico
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if (token && id) {
-            getMetrics(token, id).then(setMetrics);
-            getHistory(token, id).then(setHistory);
-        } else {
+        if (!token || !id) {
             setMetrics(null);
             setHistory([]);
+            return;
         }
+
+        setLoadingMetrics(true);
+        Promise.all([getMetrics(token, id), getHistory(token, id)])
+            .then(([metricsData, historyData]) => {
+                setMetrics(metricsData);
+                setHistory(historyData);
+            })
+            .catch(() => toast.error("❌ Erro ao carregar métricas"))
+            .finally(() => setLoadingMetrics(false));
     }, [id]);
 
     const chartData: ChartItem[] =
@@ -90,7 +107,7 @@ export default function Manager() {
         try {
             await navigator.clipboard.writeText(rotateUrl);
             toast.success("✅ Link de rotação copiado!");
-        } catch (err) {
+        } catch {
             toast.error("❌ Erro ao copiar o link.");
         }
     };
@@ -116,7 +133,7 @@ export default function Manager() {
             if (id === metrics?.id) {
                 router.push("/dashboard/manager");
             }
-        } catch (e) {
+        } catch {
             toast.error("❌ Erro ao deletar link.");
         } finally {
             setLoading(false);
@@ -127,8 +144,15 @@ export default function Manager() {
         <div className="max-w-6xl mx-auto p-6 space-y-10">
             <h1 className="text-2xl font-bold">Gerenciar Links</h1>
 
+            {/* Carregando lista de links */}
+            {loading && !id && (
+                <div className="flex justify-center py-10">
+                    <Loader2 className="animate-spin text-blue-600" size={32} />
+                </div>
+            )}
+
             {/* Lista de links */}
-            {!id && (
+            {!id && !loading && (
                 <div className="grid md:grid-cols-2 gap-6">
                     {links.map((link) => (
                         <div
@@ -137,8 +161,8 @@ export default function Manager() {
                         >
                             <div className="space-y-2">
                                 <p className="flex items-center gap-2 text-gray-700">
-                                    <Link2 size={16} />{" "}
-                                    <strong>Original:</strong> {link.originalUrl}
+                                    <Link2 size={16} /> <strong>Original:</strong>{" "}
+                                    {link.originalUrl}
                                 </p>
                                 <p className="text-gray-600">
                                     <strong>Cliques:</strong> {link.accessCount}
@@ -184,7 +208,9 @@ export default function Manager() {
             {id && (
                 <div className="mt-12 bg-white p-6 rounded-xl shadow-md">
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-semibold dark:text-black">Métricas do Link</h2>
+                        <h2 className="text-xl font-semibold dark:text-black">
+                            Métricas do Link
+                        </h2>
                         <div className="flex gap-3">
                             <button
                                 onClick={() => router.push("/dashboard/manager")}
@@ -220,9 +246,16 @@ export default function Manager() {
                         </div>
                     </div>
 
-                    {!metrics ? (
-                        <p>Carregando métricas...</p>
-                    ) : (
+                    {/* Carregando métricas */}
+                    {loadingMetrics && (
+                        <div className="flex justify-center py-10">
+                            <Loader2 className="animate-spin text-blue-600" size={32} />
+                        </div>
+                    )}
+
+                    {!loadingMetrics && !metrics && <p>Carregando métricas...</p>}
+
+                    {!loadingMetrics && metrics && (
                         <div className="space-y-8">
                             <div className="space-y-2 dark:text-black">
                                 <p>
@@ -293,6 +326,7 @@ export default function Manager() {
         </div>
     );
 }
+
 
 
 
