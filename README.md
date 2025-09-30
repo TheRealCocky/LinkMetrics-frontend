@@ -1,38 +1,49 @@
-# 🌐 LinkedMetrics Frontend
+# 🎨 LinkedMetrics Frontend
 
-Frontend of **LinkedMetrics**, built with **Next.js 15 + TypeScript**.  
-A modern web app to manage, rotate, and track links with real-time metrics.  
-Deployed on **Vercel**.
-
----
-
-## 📸 Preview
-
-![Dashboard Preview](https://via.placeholder.com/1200x600.png?text=LinkedMetrics+Dashboard)  
-*Example of the dashboard with link management and analytics.*
+> The modern frontend interface for [LinkedMetrics](https://link-metrics-frontend.vercel.app), a smart link management platform with rotation, analytics, and insights.  
+Built with ⚛️ **Next.js 14**, 🎨 **TailwindCSS**, and deployed on ▲ **Vercel**.  
 
 ---
 
-## 🚀 Tech Stack
+## 🌟 Preview
 
-- ⚡ [Next.js 15](https://nextjs.org/) – React Framework  
-- 🎨 [TailwindCSS](https://tailwindcss.com/) – Styling & responsiveness  
-- 📊 [Lucide Icons](https://lucide.dev/) – Beautiful icons  
-- 🔑 Integration with **NestJS backend** for authentication & metrics  
-- ☁️ Deployment on **Vercel**
+<p align="center">
+  <img src="https://your-screenshot-link-here.png" alt="LinkedMetrics Dashboard" width="800"/>
+</p>
 
 ---
 
-## 📦 Installation & Setup
+## 🛠️ Tech Stack
 
-Clone the repository and install dependencies:
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/Shadcn/UI-000000?style=for-the-badge&logo=radix-ui&logoColor=white" />
+  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" />
+</p>
 
+---
+
+## ✨ Features
+
+- 🔐 **Authentication flow** (Login/Register via backend API)  
+- 🗂️ **Persistent Dashboard Layout** with fixed sidebar  
+- ➕ **Create, manage and delete links**  
+- 📊 **View link analytics & history** with charts  
+- 🌍 **Seamless CORS-ready API integration**  
+- 🎨 **Beautiful UI** powered by Tailwind + Shadcn  
+- 📱 **Responsive & mobile-ready**  
+
+---
+
+## ⚡ Getting Started
+
+### 1️⃣ Clone & Install
 ```bash
-# Clone the project
 git clone https://github.com/your-username/linkedmetrics-frontend.git
-
-# Enter the project folder
 cd linkedmetrics-frontend
+npm install
 
 # Install dependencies
 npm install
