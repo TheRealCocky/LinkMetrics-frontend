@@ -101,7 +101,7 @@ export default function Manager() {
         })) || [];
 
     const handleCopy = async (id: string) => {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
         const rotateUrl = `${apiUrl}/links/${id}/rotate`;
 
         try {
@@ -113,7 +113,7 @@ export default function Manager() {
     };
 
     const handleRotate = (id: string) => {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL ;
         const rotateUrl = `${apiUrl}/links/${id}/rotate`;
 
         window.open(rotateUrl, "_blank");
